@@ -62,6 +62,11 @@ export const Controllers = [
         controller: PostController,
         routes:[{
             method: "get",
+            route: "/posts",
+            middlewares: [TokenValidation],
+            action: "all"
+        },{
+            method: "get",
             route: "/posts/:id",
             middlewares: [TokenValidation, PostPermissionValidation],
             action: "one"

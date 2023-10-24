@@ -1,5 +1,6 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from "typeorm"
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany } from "typeorm"
 import { Career } from "./Career"
+import { Document } from "./Document";
 
 export type PeriodType = "quarterly" | "annual";
 
@@ -25,5 +26,8 @@ export class Subject {
 
     @ManyToOne(() => Career, (career) => career.subjects)
     career: Career
+
+    @OneToMany(() => Document, (document) => document.subject)
+    documents: Document[]
 
 }

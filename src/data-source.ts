@@ -7,6 +7,7 @@ import { Subject } from "./entity/Subject"
 import { Category } from "./entity/Category"
 import { Section } from "./entity/Section"
 import { Role } from "./entity/Role"
+import { Document } from "./entity/Document"
 
 export const AppDataSource = new DataSource({
     type: "mysql",
@@ -17,7 +18,7 @@ export const AppDataSource = new DataSource({
     database: "defaultdb",
     synchronize: true,
     logging: false,
-    entities: [User, Category, Section, Role, Post, Career, Subject],
+    entities: [User, Category, Section, Role, Post, Career, Subject, Document],
     migrations: [],
     subscribers: [],
 })
