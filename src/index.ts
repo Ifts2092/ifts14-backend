@@ -100,7 +100,7 @@ export let start = async () => {
         let rol = await roleRepository.findOne({
             where: { name: 'Admin' }
         });
-        if(rol == null){
+        if(rol != null){
 
             let password = await bcrypt.hash("admin",10);
             await userRepository.save(
@@ -150,7 +150,7 @@ export let start = async () => {
 
             let rs = await roleRepository.find({
                 where: [
-                        { name: role }, 
+                        { name: category }, 
                         { name: 'Admin'}
                 ]
             });
