@@ -7,6 +7,8 @@ import { Subject } from "./entity/Subject"
 import { Category } from "./entity/Category"
 import { Section } from "./entity/Section"
 import { Role } from "./entity/Role"
+import { SocialNetwork } from "./entity/SocialNetwork"
+import { Site } from "./entity/Site"
 
 export const AppDataSource = new DataSource({
     type: "mysql",
@@ -17,7 +19,7 @@ export const AppDataSource = new DataSource({
     database: "defaultdb",
     synchronize: true,
     logging: false,
-    entities: [User, Category, Section, Role, Post, Career, Subject],
+    entities: [User, Category, Section, Role, Post, Career, Subject, Site, SocialNetwork],
     migrations: [],
     subscribers: [],
 })
