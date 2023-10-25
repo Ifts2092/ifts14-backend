@@ -1,4 +1,5 @@
 import { CareerController } from "./controller/CareerController"
+import { DocumentController } from "./controller/DocumentController";
 import { PostController } from "./controller/PostController";
 import { UserController } from "./controller/UserController"
 import { CategoryPermissionValidation, PostPermissionValidation, TokenValidation } from "./middlewares"
@@ -74,6 +75,26 @@ export const Controllers = [
             method: "post",
             route: "/posts",
             middlewares: [TokenValidation, CategoryPermissionValidation],
+            action: "save"
+        }
+    ]
+    },
+    { 
+        controller: DocumentController,
+        routes:[{
+            method: "get",
+            route: "/documents",
+            middlewares: [TokenValidation],
+            action: "all"
+        },{
+            method: "get",
+            route: "/documents/:id",
+            middlewares: [TokenValidation],
+            action: "one"
+        }, {
+            method: "post",
+            route: "/documents",
+            middlewares: [TokenValidation],
             action: "save"
         }
     ]
