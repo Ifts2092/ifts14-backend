@@ -10,7 +10,7 @@ export const Controllers = [
         controller: UserController,
         routes:[{
             method: "post",
-            route: "/auth",
+            route: "/auth/login",
             action: "auth"
         },
         {
@@ -63,18 +63,21 @@ export const Controllers = [
         controller: PostController,
         routes:[{
             method: "get",
-            route: "/posts",
+            route: "/admin/posts",
             middlewares: [TokenValidation],
             action: "all"
-        },{
+        },
+        {
             method: "get",
-            route: "/posts/:id",
+            route: "/admin/posts/:id",
+
             middlewares: [TokenValidation, PostPermissionValidation],
             action: "one"
-        }, {
+        },
+        {
             method: "post",
-            route: "/posts",
-            middlewares: [TokenValidation, CategoryPermissionValidation],
+            route: "/admin/posts",
+            middlewares: [TokenValidation, PostPermissionValidation],
             action: "save"
         }
     ]
@@ -100,38 +103,3 @@ export const Controllers = [
     ]
     },
 ];
-
-// export const Routes = [
-// //USERS
-// {
-//     method: "post",
-//     route: "/auth",
-//     controller: UserController,
-//     action: "auth"
-// },
-// {
-//     method: "get",
-//     route: "/users",
-//     controller: UserController,
-//     middleware: TokenValidation,
-//     action: "all"
-// }, {
-//     method: "get",
-//     route: "/users/:id",
-//     controller: UserController,
-//     middleware: TokenValidation,
-//     action: "one"
-// }, {
-//     method: "post",
-//     route: "/users",
-//     controller: UserController,
-//     middleware: TokenValidation,
-//     action: "save"
-// }, {
-//     method: "delete",
-//     route: "/users/:id",
-//     controller: UserController,
-//     middleware: TokenValidation,
-//     action: "remove"
-// }
-// ]

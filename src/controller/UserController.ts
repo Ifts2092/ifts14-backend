@@ -24,7 +24,7 @@ export class UserController {
 
         if(result){
             const token = jwt.sign({id:user.id}, process.env.TOKEN_SECRET ||'tokentest')
-            return { access_token: token };
+            return { token: token };
         } else {
             return { messege: "Auth Fail"};
         }
