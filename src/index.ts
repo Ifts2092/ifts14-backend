@@ -39,7 +39,7 @@ AppDataSource.initialize().then(async () => {
             if(route.middlewares == null){
                 route.middlewares = [(req: Request, res: Response, next: Function) => { next()}];
             }
-            (app as any)[route.method](route.route, ...route.middlewares , (req: Request, res: Response, next: Function) => {
+            (app as any)[route.method]('/api/' + route.route, ...route.middlewares , (req: Request, res: Response, next: Function) => {
                 const result = (new (c.controller as any))[route.action](req, res, next)
                 if (result instanceof Promise) {
                     result.then(result => result !== null && result !== undefined ? res.send(result) : undefined)

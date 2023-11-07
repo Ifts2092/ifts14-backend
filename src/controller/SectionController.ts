@@ -1,14 +1,16 @@
 import { AppDataSource } from "../data-source"
 import { NextFunction, Request, Response } from "express"
-import { Career } from "../entity/Career"
+import { Site } from "../entity/Site"
+import { Category } from "../entity/Category";
+import { Section } from "../entity/Section";
 
-export class CareerController {
+export class SectionController {
 
-    private careerRepository = AppDataSource.getRepository(Career)
+    private sectionRepository = AppDataSource.getRepository(Section)
 
     async all(request: Request, response: Response, next: NextFunction) {
-        try {
-            return this.careerRepository.find()
+        try{
+            return this.sectionRepository.find();
         } catch (e){
             console.log(e);
             return response.status(500).json('Server Fail');   
@@ -19,14 +21,14 @@ export class CareerController {
         try {
             const id = parseInt(request.params.id)
 
-            const entity = await this.careerRepository.findOne({
+            const site = await this.sectionRepository.findOne({
                 where: { id }
             })
 
-            if (!entity) {
+            if (!site) {
                 return "unregistered"
             }
-            return entity
+            return site
         } catch (e){
             console.log(e);
             return response.status(500).json('Server Fail');   
@@ -34,15 +36,14 @@ export class CareerController {
     }
 
     async save(request: Request, response: Response, next: NextFunction) {
-        try { 
-            const { name, description } = request.body;
+        try{ 
+            const { name } = request.body;
 
-            const entity = Object.assign(new Career(), {
-                name,
-                description
+            const entity = Object.assign(new Section(), {
+                name
             })
 
-            return this.careerRepository.save(entity)
+            return this.sectionRepository.save(entity)
         } catch (e){
             console.log(e);
             return response.status(500).json('Server Fail');   
@@ -50,18 +51,19 @@ export class CareerController {
     }
 
     async remove(request: Request, response: Response, next: NextFunction) {
-        try { 
+        try {
             const id = parseInt(request.params.id)
 
-            let toRemove = await this.careerRepository.findOneBy({ id })
+            let toRemove = await this.sectionRepository.findOneBy({ id })
 
             if (!toRemove) {
                 return "this not exist"
             }
 
-            await this.careerRepository.remove(toRemove)
+            await this.sectionRepository.remove(toRemove)
 
             return "has been removed"
+            
         } catch (e){
             console.log(e);
             return response.status(500).json('Server Fail');   

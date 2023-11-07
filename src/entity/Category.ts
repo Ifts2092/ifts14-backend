@@ -14,7 +14,7 @@ export class Category {
     @OneToMany(() => Post, (p) => p.category)
     posts: Post[]
 
-    @ManyToMany(() => Role)
+    @ManyToMany(() => Role, (role) => role.categories)
     @JoinTable()
     roles: Role[]
 

@@ -1,14 +1,15 @@
 import { AppDataSource } from "../data-source"
 import { NextFunction, Request, Response } from "express"
-import { Career } from "../entity/Career"
+import { Role } from "../entity/Role";
 
-export class CareerController {
 
-    private careerRepository = AppDataSource.getRepository(Career)
+export class RoleController {
+
+    private roleRepository = AppDataSource.getRepository(Role)
 
     async all(request: Request, response: Response, next: NextFunction) {
-        try {
-            return this.careerRepository.find()
+        try{
+            return this.roleRepository.find();
         } catch (e){
             console.log(e);
             return response.status(500).json('Server Fail');   
@@ -19,14 +20,14 @@ export class CareerController {
         try {
             const id = parseInt(request.params.id)
 
-            const entity = await this.careerRepository.findOne({
+            const role = await this.roleRepository.findOne({
                 where: { id }
             })
 
-            if (!entity) {
+            if (!role) {
                 return "unregistered"
             }
-            return entity
+            return role
         } catch (e){
             console.log(e);
             return response.status(500).json('Server Fail');   
@@ -34,15 +35,19 @@ export class CareerController {
     }
 
     async save(request: Request, response: Response, next: NextFunction) {
-        try { 
-            const { name, description } = request.body;
+        try{ 
+            const { id, name } = request.body;
 
-            const entity = Object.assign(new Career(), {
-                name,
-                description
-            })
+            let role = new Role();
+            if(id){
+                role = await this.roleRepository.findOneBy({ id })
+            }
 
-            return this.careerRepository.save(entity)
+            const entity = Object.assign(role, {
+                name
+            });
+
+            return this.roleRepository.save(entity)
         } catch (e){
             console.log(e);
             return response.status(500).json('Server Fail');   
@@ -50,18 +55,19 @@ export class CareerController {
     }
 
     async remove(request: Request, response: Response, next: NextFunction) {
-        try { 
+        try {
             const id = parseInt(request.params.id)
 
-            let toRemove = await this.careerRepository.findOneBy({ id })
+            let toRemove = await this.roleRepository.findOneBy({ id })
 
             if (!toRemove) {
                 return "this not exist"
             }
 
-            await this.careerRepository.remove(toRemove)
+            await this.roleRepository.remove(toRemove)
 
             return "has been removed"
+            
         } catch (e){
             console.log(e);
             return response.status(500).json('Server Fail');   

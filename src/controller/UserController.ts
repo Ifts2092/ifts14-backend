@@ -10,54 +10,78 @@ export class UserController {
 
     async auth(request: Request, response: Response, next: NextFunction) {
         
-        const { username, password } = request.body;
+        try {
+            const { username, password } = request.body;
 
-        const user = await this.userRepository.findOne({
-            where: { username: username }
-        })
+            const user = await this.userRepository.findOne({
+                where: { username: username }
+            })
 
-        if (!user) {
-            return { messege: "Auth Fail"};
-        }
+            if (!user) {
+                return { messege: "Auth Fail"};
+            }
 
-        let result = await bcrypt.compare( password, user.password);
+            let result = await bcrypt.compare( password, user.password);
 
-        if(result){
-            const token = jwt.sign({id:user.id}, process.env.TOKEN_SECRET ||'tokentest')
-            return { token: token };
-        } else {
-            return { messege: "Auth Fail"};
+            if(result){
+                const token = jwt.sign({id:user.id}, process.env.TOKEN_SECRET ||'tokentest')
+                return { token: token };
+            } else {
+                return { messege: "Auth Fail"};
+            }
+        } catch (e){
+            console.log(e);
+            return response.status(500).json('Server Fail');   
         }
         
     }
 
     async all(request: Request, response: Response, next: NextFunction) {
-        console.log(request.userId);
-        return this.userRepository.find()
+        try{
+            return this.userRepository.find()
+        } catch (e){
+            console.log(e);
+            return response.status(500).json('Server Fail');   
+        }
     }
 
     async one(request: Request, response: Response, next: NextFunction) {
-        const id = parseInt(request.params.id)
+        try{
+            const id = parseInt(request.params.id)
 
-        const entity = await this.userRepository.findOne({
-            where: { id }
-        })
+            const entity = await this.userRepository.findOne({
+                where: { id }
+            })
 
-        if (!entity) {
-            return "unregistered user"
+            if (!entity) {
+                return "unregistered user"
+            }
+            return entity
+        } catch (e){
+            console.log(e);
+            return response.status(500).json('Server Fail');   
         }
-        return entity
     }
 
     async save(request: Request, response: Response, next: NextFunction) {
-        const { username, password } = request.body;
+        try{
+            const {id, username, password } = request.body;
 
-        const entity = Object.assign(new User(), {
-            username,
-            password
-        })
+            let user = new User();
+            if(id){
+                user = await this.userRepository.findOneBy({ id })
+            }
 
-        return this.userRepository.save(entity)
+            const entity = Object.assign(user, {
+                username,
+                password
+            })
+
+            return this.userRepository.save(entity)
+        } catch (e){
+            console.log(e);
+            return response.status(500).json('Server Fail');   
+        }
     }
 
     async remove(request: Request, response: Response, next: NextFunction) {
@@ -72,6 +96,21 @@ export class UserController {
         await this.userRepository.remove(toRemove)
 
         return "user has been removed"
+    }
+
+    async categories(request: Request, response: Response, next: NextFunction) {
+        try{ 
+            let user = await this.userRepository.findOne({
+                where: { id: request.userId }
+            });
+
+            let c = user.role.categories;
+
+            return c;
+        } catch (e){
+            console.log(e);
+            return response.status(500).json('Server Fail');   
+        }
     }
 
 }

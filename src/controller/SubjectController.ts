@@ -7,46 +7,66 @@ export class SubjectController {
     private subjectRepository = AppDataSource.getRepository(Subject)
 
     async all(request: Request, response: Response, next: NextFunction) {
-        return this.subjectRepository.find()
+        try {
+            return this.subjectRepository.find()
+        } catch (e){
+            console.log(e);
+            return response.status(500).json('Server Fail');   
+        }
     }
 
     async one(request: Request, response: Response, next: NextFunction) {
-        const id = parseInt(request.params.id)
+        try { 
+            const id = parseInt(request.params.id)
 
-        const subject = await this.subjectRepository.findOne({
-            where: { id }
-        })
+            const subject = await this.subjectRepository.findOne({
+                where: { id }
+            })
 
-        if (!subject) {
-            return "unregistered"
+            if (!subject) {
+                return "unregistered"
+            }
+            return subject
+        } catch (e){
+            console.log(e);
+            return response.status(500).json('Server Fail');   
         }
-        return subject
     }
 
     async save(request: Request, response: Response, next: NextFunction) {
-        const { name, year, type } = request.body;
+        try { 
+            const { name, year, type } = request.body;
 
-        const entity = Object.assign(new Subject(), {
-            name,
-            year,
-            type
-        })
+            const entity = Object.assign(new Subject(), {
+                name,
+                year,
+                type
+            })
 
-        return this.subjectRepository.save(entity)
+            return this.subjectRepository.save(entity)
+        } catch (e){
+            console.log(e);
+            return response.status(500).json('Server Fail');   
+        }
     }
 
     async remove(request: Request, response: Response, next: NextFunction) {
-        const id = parseInt(request.params.id)
+        try  { 
+            const id = parseInt(request.params.id)
 
-        let toRemove = await this.subjectRepository.findOneBy({ id })
+            let toRemove = await this.subjectRepository.findOneBy({ id })
 
-        if (!toRemove) {
-            return "this not exist"
+            if (!toRemove) {
+                return "this not exist"
+            }
+
+            await this.subjectRepository.remove(toRemove)
+
+            return "has been removed"
+        } catch (e){
+            console.log(e);
+            return response.status(500).json('Server Fail');   
         }
-
-        await this.subjectRepository.remove(toRemove)
-
-        return "has been removed"
     }
 
 }

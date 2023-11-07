@@ -4,7 +4,7 @@ import { Post } from "../entity/Post"
 import { User } from "../entity/User"
 import { Section } from "../entity/Section"
 
-export class PostController {
+export class FrontendController {
 
     private postRepository = AppDataSource.getRepository(Post)
     private sectionRepository = AppDataSource.getRepository(Section)

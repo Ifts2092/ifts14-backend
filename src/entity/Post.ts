@@ -24,4 +24,11 @@ export class Post {
     @ManyToOne(() => Section, (s) => s.posts)
     section: Section
 
+    @Column()
+    categoryId: number
+
+    @Column()
+    sectionId: number
+
+
 }
