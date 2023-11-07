@@ -218,7 +218,7 @@ export const Controllers = [
         routes:[{
             method: "get",
             route: "front/posts",
-            action: "all"
+            action: "all_posts"
         }]
     }
 ];
