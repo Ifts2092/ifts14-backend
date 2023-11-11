@@ -78,6 +78,11 @@ export const Controllers = [
             action: "all"
         }, {
             method: "get",
+            route: "subject/bycareer/:careerId",
+            middlewares: [TokenValidation],
+            action: "some"
+        }, {
+            method: "get",
             route: "subject/:id",
             middlewares: [TokenValidation],
             action: "one"
