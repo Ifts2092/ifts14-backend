@@ -11,7 +11,7 @@ export class CareerController {
             return this.careerRepository.find()
         } catch (e){
             console.log(e);
-            return response.status(500).json('Server Fail');   
+            return {error: '500'};   
         }
     }
 
@@ -29,7 +29,7 @@ export class CareerController {
             return entity
         } catch (e){
             console.log(e);
-            return response.status(500).json('Server Fail');   
+            return {error: '500'};   
         }
     }
 
@@ -45,7 +45,7 @@ export class CareerController {
             return this.careerRepository.save(entity)
         } catch (e){
             console.log(e);
-            return response.status(500).json('Server Fail');   
+            return {error: '500'};   
         }
     }
 
@@ -64,7 +64,7 @@ export class CareerController {
             return "has been removed"
         } catch (e){
             console.log(e);
-            return response.status(500).json('Server Fail');   
+            return {error: '500'};   
         }
     }
 

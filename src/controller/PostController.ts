@@ -3,6 +3,8 @@ import { NextFunction, Request, Response } from "express"
 import { Post } from "../entity/Post"
 import { User } from "../entity/User"
 import { Section } from "../entity/Section"
+import * as fileUpload  from "express-fileupload"
+import * as mime from 'mime'
 
 export class PostController {
 
@@ -21,7 +23,7 @@ export class PostController {
             return await this.postRepository.createQueryBuilder("post").skip(page*quantity).take(quantity).getMany()
         } catch (e){
             console.log(e);
-            return response.status(500).json('Server Fail');   
+            return {error: '500'};   
         }
     }
 
@@ -39,7 +41,7 @@ export class PostController {
             return post
         } catch (e){
             console.log(e);
-            return response.status(500).json('Server Fail');   
+            return {error: '500'};   
         }
     }
 
@@ -67,17 +69,57 @@ export class PostController {
                 section
             })
 
-            return this.postRepository.save(entity)
+
+            let fileOk = true;
+                
+            // When a file has been uploaded 
+            if (request.files && Object.keys(request.files).length !== 0) { 
+                
+                // Uploaded path 
+                let uploadedFile = request.files.uploadFile; 
+
+                let max = Number.MAX_SAFE_INTEGER;
+                let randomNumber = Math.floor(Math.random() * max);
+                let extension = mime.extension(uploadedFile.mimetype);
+                      
+                let new_name = "/images/" + randomNumber + '.'+  extension;
+
+                // Upload path 
+                const uploadPath = process.cwd() + new_name; //__dirname 
+
+                //uploadedFile.name
+                
+                // To save the file using mv() function 
+                uploadedFile.mv(uploadPath, (err) => { 
+                    if (err) { 
+                        console.log(err); 
+                        //response.send("Failed !!"); 
+                        fileOk = false
+                    }
+                }); 
+
+                if(fileOk) {
+                    entity.imageUrl = new_name;
+                    //uploadedFile.name
+                }
+
+            } 
+
+
+
+            if(fileOk){
+                return this.postRepository.save(entity);
+            }
 
         } catch (e){
             console.log(e);
-            return response.status(500).json('Server Fail');   
+            return {error: '500'};   
         }
 
     }
 
     async remove(request: Request, response: Response, next: NextFunction) {
-            try { 
+        try { 
             const id = parseInt(request.params.id)
 
             let toRemove = await this.postRepository.findOneBy({ id })
@@ -91,8 +133,39 @@ export class PostController {
             return "has been removed"
         } catch (e){
             console.log(e);
-            return response.status(500).json('Server Fail');   
+            return {error: '500'};   
         }
+    }
+
+
+    async upload (request: Request, response: Response, next: NextFunction) {
+        
+        
+         // When a file has been uploaded 
+        if (request.files && Object.keys(request.files).length !== 0) { 
+            
+            // Uploaded path 
+            const uploadedFile = request.files.uploadFile; 
+        
+            // Logging uploading file 
+            //console.log(uploadedFile); 
+        
+            // Upload path 
+            const uploadPath = process.cwd() //__dirname 
+                + "/uploads/" + uploadedFile.name; 
+        
+            // To save the file using mv() function 
+            uploadedFile.mv(uploadPath, function (err) { 
+            if (err) { 
+                console.log(err); 
+                response.send("Failed !!"); 
+            } else response.send("Successfully Uploaded !!"); 
+            }); 
+        } else response.send("No file uploaded !!"); 
+
+
+
+
     }
 
 }

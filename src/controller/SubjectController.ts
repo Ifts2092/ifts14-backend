@@ -13,7 +13,7 @@ export class SubjectController {
             return this.subjectRepository.find()
         } catch (e){
             console.log(e);
-            return response.status(500).json('Server Fail');   
+            return {error: '500'};   
         }
     }
 
@@ -31,7 +31,7 @@ export class SubjectController {
             return subject
         } catch (e){
             console.log(e);
-            return response.status(500).json('Server Fail');   
+            return {error: '500'};   
         }
     }
 
@@ -50,7 +50,7 @@ export class SubjectController {
             return result;
         } catch (error) {
             console.log(error)
-            return response.status(600).json('Server Fail')
+            return {error: '500'};   
         }
     }
 
@@ -70,7 +70,7 @@ export class SubjectController {
             return this.subjectRepository.save(entity)
         } catch (e){
             console.log(e);
-            return response.status(500).json('Server Fail');   
+            return {error: '500'};   
         }
     }
 
@@ -89,7 +89,7 @@ export class SubjectController {
             return "has been removed"
         } catch (e){
             console.log(e);
-            return response.status(500).json('Server Fail');   
+            return {error: '500'};   
         }
     }
 

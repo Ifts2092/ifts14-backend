@@ -5,6 +5,7 @@ import { FrontendController } from "./controller/FrontendController";
 import { PostController } from "./controller/PostController";
 import { RoleController } from "./controller/RoleController";
 import { SectionController } from "./controller/SectionController";
+import { SettingController } from "./controller/SettingController";
 import { SubjectController } from "./controller/SubjectController";
 import { UserController } from "./controller/UserController"
 import { CategoryPermissionValidation, PostPermissionValidation, TokenValidation } from "./middlewares"
@@ -105,6 +106,11 @@ export const Controllers = [
             route: "posts",
             middlewares: [TokenValidation],
             action: "all"
+        },
+        {
+            method: "post",
+            route: "upload",
+            action: "upload"
         },
         {
             method: "get",
@@ -219,11 +225,63 @@ export const Controllers = [
             action: "remove"
         }]
     },{ 
+        controller: SettingController,
+        routes:[{
+            method: "get",
+            route: "settings",
+            middlewares: [TokenValidation],
+            action: "all"
+        }, {
+            method: "post",
+            route: "settings",
+            middlewares: [TokenValidation],
+            action: "save"
+        },{
+            method: "get",
+            route: "settings/:key",
+            middlewares: [TokenValidation],
+            action: "one"
+        }, {
+            method: "post",
+            route: "settings/save",
+            middlewares: [TokenValidation],
+            action: "saveOne"
+        }]
+    },{ 
         controller: FrontendController,
         routes:[{
             method: "get",
-            route: "front/posts",
-            action: "all_posts"
+            route: "front/posts/:section",
+            action: "getPostsBySection"
+        },{
+            method: "get",
+            route: "front/posts/:section/:category",
+            action: "getPostsBySectionAndCategory"
+        },{
+            method: "get",
+            route: "front/categories",
+            action: "getCategories"
+        },{
+            method: "get",
+            route: "front/sections",
+            action: "getSections"
+        },{
+            method: "get",
+            route: "front/postbyid/:id",
+            action: "getPostById"
+        },{
+            method: "get",
+            route: "front/settings",
+            action: "getSettings"
+        
+        },{
+            method: "get",
+            route: "front/careers",
+            action: "getCareers"
+        },{
+            method: "get",
+            route: "front/subjectsbycareer/:id",
+            action: "getSubjectsByCareer"
         }]
     }
 ];

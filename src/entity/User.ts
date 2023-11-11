@@ -11,7 +11,7 @@ export class User {
     @Column()
     username: string
 
-    @Column()
+    @Column({ select: false })
     password: string
     
     @ManyToOne(() => Role, (r) => r.users, {
@@ -19,6 +19,9 @@ export class User {
     })
     @JoinColumn()
     role: Role
+
+    @Column()
+    roleId: number
 
     @OneToMany(() => Post, (p) => p.user)
     posts: Post[]

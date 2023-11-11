@@ -1,6 +1,5 @@
 import { AppDataSource } from "../data-source"
 import { NextFunction, Request, Response } from "express"
-import { Site } from "../entity/Site"
 import { Category } from "../entity/Category";
 import { Section } from "../entity/Section";
 
@@ -13,7 +12,7 @@ export class SectionController {
             return this.sectionRepository.find();
         } catch (e){
             console.log(e);
-            return response.status(500).json('Server Fail');   
+            return {error: '500'};   
         }
     }
 
@@ -31,7 +30,7 @@ export class SectionController {
             return site
         } catch (e){
             console.log(e);
-            return response.status(500).json('Server Fail');   
+            return {error: '500'};   
         }
     }
 
@@ -46,7 +45,7 @@ export class SectionController {
             return this.sectionRepository.save(entity)
         } catch (e){
             console.log(e);
-            return response.status(500).json('Server Fail');   
+            return {error: '500'};   
         }
     }
 
@@ -63,10 +62,10 @@ export class SectionController {
             await this.sectionRepository.remove(toRemove)
 
             return "has been removed"
-            
+
         } catch (e){
             console.log(e);
-            return response.status(500).json('Server Fail');   
+            return {error: '500'};   
         }
     }
 

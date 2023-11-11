@@ -3,19 +3,30 @@ import { NextFunction, Request, Response } from "express"
 import { User } from "../entity/User"
 import * as bcrypt from "bcryptjs";
 import * as jwt from "jsonwebtoken"
+import { Role } from "../entity/Role";
 
 export class UserController {
 
     private userRepository = AppDataSource.getRepository(User)
+    private roleRepository = AppDataSource.getRepository(Role)
 
     async auth(request: Request, response: Response, next: NextFunction) {
         
         try {
             const { username, password } = request.body;
 
-            const user = await this.userRepository.findOne({
-                where: { username: username }
-            })
+            const user = await this.userRepository
+                        .createQueryBuilder("user")
+                        .select("user.id")
+                        .addSelect("user.username")
+                        .addSelect("user.password")        
+                        .where("username = :username")
+                        .setParameters({ username: username})
+                        .getOne();
+
+            // const user = await this.userRepository.findOne({
+            //     where: { username: username }
+            // })
 
             if (!user) {
                 return { messege: "Auth Fail"};
@@ -31,17 +42,27 @@ export class UserController {
             }
         } catch (e){
             console.log(e);
-            return response.status(500).json('Server Fail');   
+            return {error: '500'};   
         }
         
     }
 
     async all(request: Request, response: Response, next: NextFunction) {
         try{
-            return this.userRepository.find()
+            let users =  await this.userRepository
+            .createQueryBuilder("user")
+            .select("user.id")
+            .addSelect("user.username")
+            .addSelect("user.roleId")        
+            //.where("id != :id")
+            //.setParameters({ id: request.userId})
+            .getMany();
+
+            return users;
+
         } catch (e){
             console.log(e);
-            return response.status(500).json('Server Fail');   
+            return {error: '500'};   
         }
     }
 
@@ -59,28 +80,62 @@ export class UserController {
             return entity
         } catch (e){
             console.log(e);
-            return response.status(500).json('Server Fail');   
+            return {error: '500'};   
         }
     }
 
     async save(request: Request, response: Response, next: NextFunction) {
         try{
-            const {id, username, password } = request.body;
+            let {id, username, password,passwordRepeat, roleId } = request.body;
 
             let user = new User();
-            if(id){
-                user = await this.userRepository.findOneBy({ id })
+
+            if(id){    
+                user = await this.userRepository
+                    .createQueryBuilder("user")
+                    .select("user.id")
+                    .addSelect("user.username")
+                    .addSelect("user.password")        
+                    .where("id = :id")
+                    .setParameters({ id: id})
+                    .getOne();
             }
+  
+
+            let role = await this.roleRepository.findOneBy({ id:roleId })
 
             const entity = Object.assign(user, {
-                username,
-                password
+                username            
             })
 
-            return this.userRepository.save(entity)
+            if(entity.id != request.userId){
+                entity.role = role;
+            }
+            
+            if(password == passwordRepeat){
+
+                if(password != ""){
+                    password = await bcrypt.hash(password,10);
+                    entity.password = password;
+                    return this.userRepository.save(entity)
+                } else {
+                    if(entity.id){
+                        return this.userRepository.save(entity)
+                    } else {
+                        return {error: 'New user needs password'};           
+                    }
+                }               
+                
+                
+            } else {
+                
+                return {error: 'Password not match'};   
+            }         
+            
+            
         } catch (e){
             console.log(e);
-            return response.status(500).json('Server Fail');   
+            return {error: '500'};   
         }
     }
 
@@ -88,6 +143,10 @@ export class UserController {
         const id = parseInt(request.params.id)
 
         let toRemove = await this.userRepository.findOneBy({ id })
+
+        if(toRemove.id == request.userId){
+            return { error: "No puedes remover tu propio usuario"}
+        }
 
         if (!toRemove) {
             return "this user not exist"
@@ -109,7 +168,7 @@ export class UserController {
             return c;
         } catch (e){
             console.log(e);
-            return response.status(500).json('Server Fail');   
+            return {error: '500'};   
         }
     }
 

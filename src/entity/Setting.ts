@@ -1,18 +1,18 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToMany, ManyToOne } from "typeorm"
-import { Site } from "./Site"
 
 @Entity()
-export class SocialNetwork {
+export class Setting {
 
     @PrimaryGeneratedColumn()
     id: number
 
     @Column()
-    name: string
+    key: string
 
     @Column()
-    url: string
+    value: string
 
-    @ManyToOne(() => Site, (s) => s.socialNet)
-    site: Site
+    @Column('boolean', {default: true})
+    visible: Boolean
+
 }

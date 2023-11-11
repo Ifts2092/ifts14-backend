@@ -12,7 +12,7 @@ export class RoleController {
             return this.roleRepository.find();
         } catch (e){
             console.log(e);
-            return response.status(500).json('Server Fail');   
+            return {error: '500'};   
         }
     }
 
@@ -30,7 +30,7 @@ export class RoleController {
             return role
         } catch (e){
             console.log(e);
-            return response.status(500).json('Server Fail');   
+            return {error: '500'};   
         }
     }
 
@@ -50,7 +50,7 @@ export class RoleController {
             return this.roleRepository.save(entity)
         } catch (e){
             console.log(e);
-            return response.status(500).json('Server Fail');   
+            return {error: '500'};   
         }
     }
 
@@ -70,7 +70,7 @@ export class RoleController {
             
         } catch (e){
             console.log(e);
-            return response.status(500).json('Server Fail');   
+            return {error: '500'};   
         }
     }
 

@@ -1,6 +1,5 @@
 import { AppDataSource } from "../data-source"
 import { NextFunction, Request, Response } from "express"
-import { Site } from "../entity/Site"
 import { Category } from "../entity/Category";
 
 export class CategoryController {

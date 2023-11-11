@@ -2,7 +2,7 @@ import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany } from "ty
 import { Career } from "./Career"
 import { Document } from "./Document";
 
-export type PeriodType = "quarterly" | "annual";
+export type PeriodType = "Cuatrimestral" | "Anual";
 
 
 @Entity()
@@ -19,8 +19,8 @@ export class Subject {
 
     @Column({
         type: "enum",
-        enum: ["annual", "quarterly"],
-        default: "quarterly"
+        enum: ["Anual", "Cuatrimestral"],
+        default: "Cuatrimestral"
     })
     type: PeriodType
 
