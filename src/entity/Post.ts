@@ -30,7 +30,7 @@ export class Post {
     @Column()
     sectionId: number
 
-    @Column({type:"text", default:""})
+    @Column()
     imageUrl: string
 
 

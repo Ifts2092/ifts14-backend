@@ -56,6 +56,8 @@ export class PostController {
 
             let section = await this.sectionRepository.findOneBy({ id: sectionId });
 
+            let imageUrl = '';
+
             let post = new Post();
             if(id){
                 post = await this.postRepository.findOneBy({ id })
@@ -66,7 +68,8 @@ export class PostController {
                 content,
                 user,
                 category,
-                section
+                section,
+                imageUrl
             })
 
 
