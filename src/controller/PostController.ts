@@ -14,13 +14,31 @@ export class PostController {
 
     async all(request: Request, response: Response, next: NextFunction) {
         try{
-            let     page = parseInt(request.query.page)
-            if(!page){ page = 0; }
+            // let     page = parseInt(request.query.page)
+            // if(!page){ page = 0; }
             
-            let quantity  = parseInt(request.query.quantity);
-            if(!quantity){ quantity = 10; }
+            // let quantity  = parseInt(request.query.quantity);
+            // if(!quantity){ quantity = 10; }
 
-            return await this.postRepository.createQueryBuilder("post").skip(page*quantity).take(quantity).getMany()
+            let userId = request.userId;
+            let user = await this.userRepository.findOne({
+                where: { id: userId }
+            });
+    
+
+            return await this.postRepository
+            .createQueryBuilder("post")
+            .innerJoinAndSelect("post.section", "section")
+            .innerJoinAndSelect("post.category", "category")
+            //.skip(page*quantity)
+            //.take(quantity)
+            .where( "category.name IN (:...names)")
+            .setParameters({ names: user.role.categories.map(function(item) {
+                                return item['name'];
+                           })
+            })
+            .getMany()
+
         } catch (e){
             console.log(e);
             return {error: '500'};   
