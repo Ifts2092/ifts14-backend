@@ -27,7 +27,7 @@ export const Controllers = [
         }, {
             method: "get",
             route: "users/categories",
-            //middlewares: [TokenValidation],
+            middlewares: [TokenValidation],
             action: "categories"
         },{
             method: "get",

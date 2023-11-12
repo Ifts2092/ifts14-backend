@@ -19,7 +19,8 @@ export class UserController {
                         .createQueryBuilder("user")
                         .select("user.id")
                         .addSelect("user.username")
-                        .addSelect("user.password")        
+                        .addSelect("user.password") 
+                        .innerJoinAndSelect("user.role", "role")    
                         .where("username = :username")
                         .setParameters({ username: username})
                         .getOne();
@@ -35,7 +36,7 @@ export class UserController {
             let result = await bcrypt.compare( password, user.password);
 
             if(result){
-                const token = jwt.sign({id:user.id}, process.env.TOKEN_SECRET ||'tokentest')
+                const token = jwt.sign({id:user.id, role:user.role.name}, process.env.TOKEN_SECRET ||'tokentest')
                 return { token: token };
             } else {
                 return { messege: "Auth Fail"};
