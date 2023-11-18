@@ -29,5 +29,8 @@ export class Subject {
 
     @OneToMany(() => Document, (document) => document.subject)
     documents: Document[]
+    
+    @Column()
+    careerId: number
 
 }

@@ -56,12 +56,17 @@ export class SubjectController {
 
     async save(request: Request, response: Response, next: NextFunction) {
         try { 
-            const { name, year, type,careerId } = request.body;
+            const {id, name, year, type,careerId } = request.body;
             let career = await this.careerRepository.findOne({
                 where: { id: careerId }
             });
 
-            const entity = Object.assign(new Subject(), {
+            let subject = new Subject();
+            if(id){
+                subject = await this.subjectRepository.findOneBy({ id })
+            }
+
+            const entity = Object.assign(subject, {
                 name,
                 year,
                 type,
@@ -86,7 +91,7 @@ export class SubjectController {
 
             await this.subjectRepository.remove(toRemove)
 
-            return "has been removed"
+            return { message: "has been removed"}
         } catch (e){
             console.log(e);
             return {error: '500'};   

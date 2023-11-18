@@ -55,6 +55,7 @@ export class UserController {
             .select("user.id")
             .addSelect("user.username")
             .addSelect("user.roleId")        
+            .innerJoinAndSelect("user.role", "role")
             //.where("id != :id")
             //.setParameters({ id: request.userId})
             .getMany();
@@ -141,21 +142,26 @@ export class UserController {
     }
 
     async remove(request: Request, response: Response, next: NextFunction) {
-        const id = parseInt(request.params.id)
+        try {
+            const id = parseInt(request.params.id)
 
-        let toRemove = await this.userRepository.findOneBy({ id })
+            let toRemove = await this.userRepository.findOneBy({ id })
 
-        if(toRemove.id == request.userId){
-            return { error: "No puedes remover tu propio usuario"}
+            if(toRemove.id == request.userId){
+                return { error: "No puedes remover tu propio usuario"}
+            }
+
+            if (!toRemove) {
+                return "this user not exist"
+            }
+
+            await this.userRepository.remove(toRemove)
+
+            return { message: "has been removed"}
+        } catch (e){
+            console.log(e);
+            return {error: '500'};   
         }
-
-        if (!toRemove) {
-            return "this user not exist"
-        }
-
-        await this.userRepository.remove(toRemove)
-
-        return "user has been removed"
     }
 
     async categories(request: Request, response: Response, next: NextFunction) {

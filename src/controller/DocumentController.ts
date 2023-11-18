@@ -55,7 +55,7 @@ export class DocumentController {
 
         await this.documentRepository.remove(toRemove)
 
-        return "has been removed"
+        return { message: "has been removed"}
     }
 
 }

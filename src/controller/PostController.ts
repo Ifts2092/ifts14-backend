@@ -151,7 +151,7 @@ export class PostController {
 
             await this.postRepository.remove(toRemove)
 
-            return "has been removed"
+            return { message: "has been removed"}
         } catch (e){
             console.log(e);
             return {error: '500'};   

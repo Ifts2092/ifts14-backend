@@ -45,7 +45,7 @@ export class CategoryController {
 
         await this.categoryRepository.remove(toRemove)
 
-        return "has been removed"
+        return { message: "has been removed"}
     }
 
 }

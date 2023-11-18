@@ -66,7 +66,7 @@ export class RoleController {
 
             await this.roleRepository.remove(toRemove)
 
-            return "has been removed"
+            return { message: "has been removed"}
             
         } catch (e){
             console.log(e);

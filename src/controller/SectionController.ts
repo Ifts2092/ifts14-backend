@@ -61,7 +61,7 @@ export class SectionController {
 
             await this.sectionRepository.remove(toRemove)
 
-            return "has been removed"
+            return { message: "has been removed"}
 
         } catch (e){
             console.log(e);

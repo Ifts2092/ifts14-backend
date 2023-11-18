@@ -61,7 +61,7 @@ export class CareerController {
 
             await this.careerRepository.remove(toRemove)
 
-            return "has been removed"
+            return { message: "has been removed"}
         } catch (e){
             console.log(e);
             return {error: '500'};   
